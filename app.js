@@ -46,23 +46,32 @@ passport.use(
       usernameField: "email",
       passwordField: "password",
     },
-    async (username, password, done) => {
-      try {
-        let player = Player.findOne({ where: { email: username } });
-        if (!player) {
-          return done(null, false);
-        }
-        const result = await bcrypt.compare(password, player.password);
-        if (result && player.role === "admin") {
-          return done(null, player);
-        }
-        return done(null, { id: player.id, role: player.role });
-      } catch (error) {
-        return done(error);
-      }
+    (username, password, done) => {
+      Player.findOne({ where: { email: username } })
+        .then(async (player) => {
+          const result = await bcrypt.compare(password, player.password);
+          if (result) {
+            return done(null, player);
+          } else {
+            return done(null, false, { message: "Invalid Password" });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          return done(null, false, { message: "Invalid Mail" });
+        });
     }
   )
 );
+// try {
+// let player =
+//   if (!player) {
+//   return done(null, false);
+// }
+// if (result && player.role === "admin") {
+//   return done(null, player);
+// }else if(result && player.role === "player"){
+//   return done(null,player)
 
 passport.serializeUser((player, done) => {
   console.log("serializing user in session", player.id);
@@ -79,13 +88,22 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-const { Player } = require("./models");
+const { Player, Sport } = require("./models");
+
+app.use(function (request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
 
 app.get("/", async (request, response) => {
-  response.render("index", {
-    title: "Sports Scheduler",
-    crsfToken: request.csrfToken(),
-  });
+  if (request.user) {
+    return response.redirect("/sports");
+  } else {
+    response.render("index", {
+      title: "Sports Scheduler",
+      crsfToken: request.csrfToken(),
+    });
+  }
 });
 
 app.get("/signup", async (request, response) => {
@@ -95,7 +113,51 @@ app.get("/signup", async (request, response) => {
   });
 });
 
+app.get("/login", (request, response) => {
+  response.render("login", { title: "Login", csrfToken: request.csrfToken() });
+});
+
+app.get("/login", async (request, response) => {
+  response.render("login", {
+    title: "Login",
+    csrfToken: request.csrfToken(),
+  });
+});
+
+app.get("/signout", (request, response, next) => {
+  request.logout((error) => {
+    if (error) {
+      return next(error);
+    }
+    response.redirect("/");
+  });
+});
+
+app.post(
+  "/session",
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
+  (request, response) => {
+    console.log(request.user.role);
+    response.redirect("/sports");
+  }
+);
+
 app.post("/players", async (request, response) => {
+  if (request.body.email.length == 0) {
+    request.flash("error", "Email can't be empty!");
+    return response.redirect("/signup");
+  }
+  if (request.body.name.length == 0) {
+    request.flash("error", "FirstName cant be empty");
+    return response.redirect("/signup");
+  }
+  if (request.body.password.length < 8) {
+    request.flash("error", "Password must contain minimum of 8 characters");
+    return response.redirect("/signup");
+  }
   const submitValue = request.body.submit;
   const hashedPassword = await bcrypt.hash(request.body.password, saltRounds);
   console.log(hashedPassword);
@@ -108,6 +170,12 @@ app.post("/players", async (request, response) => {
         password: hashedPassword,
         role: "admin",
       });
+      request.login(admin, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        response.redirect("/sports");
+      });
     } else if (submitValue === "player") {
       const player = await Player.create({
         name: request.body.name,
@@ -115,23 +183,86 @@ app.post("/players", async (request, response) => {
         password: hashedPassword,
         role: "player",
       });
+      request.login(player, (err) => {
+        if (err) {
+          console.log(err);
+        }
+        response.redirect("/sports");
+      });
     } else {
       console.log("Invalid submit button");
     }
   } catch (error) {
-    // request.flash("error","This mail already existes,try using a new mail")
+    request.flash("error", "This mail already existes,try using a new mail");
     console.log(error);
+    return response.redirect("/signup");
   }
 });
 
-app.get("/sports", async (request, response) => {
-  // console.log(user)
-});
+app.get(
+  "/sports",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    console.log(request.user);
+    try {
+      const loggedInPlayer = request.user.id;
+      const player = await Player.findByPk(loggedInPlayer);
+      const playerName = player.dataValues.name;
+      const allSports = await Sport.getSports(loggedInPlayer);
+      if (request.accepts("html")) {
+        response.render("sports", {
+          title: "Sports Page",
+          playerName,
+          allSports,
+          csrfToken: request.csrfToken(),
+        });
+      } else {
+        response.json({ allSports });
+      }
+    } catch (error) {
+      return this.response.status(422).json(error);
+    }
+  }
+);
 
-app.get("/login", async (request, response) => {
-  response.render("login", {
-    title: "Login",
-    csrfToken: request.csrfToken(),
-  });
-});
+app.get(
+  "/createSport",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    response.render("createSport", {
+      title: "Creating Sports",
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
+
+app.post(
+  "/creatingSport",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const sport = await Sport.createSport({
+        name: request.body.name,
+        userId: request.user.id,
+      });
+      console.log(sport.name);
+      return response.redirect("/sports");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+// const player = await Player.findByPk(request.player.id)
+// // const playerName = player.dataValues.name
+// if (request.accepts("html")){
+//   response.render("createSport",{
+//   title:"creating Sport",
+//   // csrfToken:request.csrfToken(),
+//   // playerName
+// })}else{
+//   return response.json(
+//     // playerName
+// )
+// }
+
 module.exports = app;

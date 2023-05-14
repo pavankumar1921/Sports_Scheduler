@@ -4,9 +4,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="./css/styles.css" rel="stylesheet">
+    <title>
+        <%= title %>
+    </title>
 </head>
-<body>
-    
+<body class="bg-green-100">
+    <div class="grid grid-cols-4">
+        <div class="col-start-2 col-span-2">
+            <%- include("header.ejs") %>
+            <p class="text-xl flex items-center">Welcome <%= playerName %></p>
+            <div>
+                <a href="/signout" class="hover:underline">Signout</a>
+            </div>
+            <div>
+                <a href="/createSport" class="hover:underline"> Create a New Sport</a>
+            </div>
+            <div>
+                <a href="#" class="hover:underline">View Reports</a>
+            </div>
+            <div>
+                <h2 class="font-semibold">All Created Sports are:</h2>
+            </div>
+            <div>
+                <%- include("createdSportsList.ejs") %>
+            </div>
+        </div> 
+    </div>
 </body>
 </html>
