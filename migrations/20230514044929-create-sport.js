@@ -12,9 +12,6 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
-      userId: {
-        type: Sequelize.STRING,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -22,14 +19,6 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-      },
-    });
-    await queryInterface.addConstraint("Sport", {
-      fields: ["userId"],
-      type: "foreign key",
-      references: {
-        table: "Player",
-        field: "id",
       },
     });
   },

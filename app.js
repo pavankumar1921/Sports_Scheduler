@@ -151,7 +151,7 @@ app.post("/players", async (request, response) => {
     return response.redirect("/signup");
   }
   if (request.body.name.length == 0) {
-    request.flash("error", "FirstName cant be empty");
+    request.flash("error", "Name cant be empty");
     return response.redirect("/signup");
   }
   if (request.body.password.length < 8) {
@@ -203,24 +203,27 @@ app.get(
   "/sports",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    console.log(request.user);
+    console.log(request.user.id);
     try {
       const loggedInPlayer = request.user.id;
       const player = await Player.findByPk(loggedInPlayer);
       const playerName = player.dataValues.name;
       const allSports = await Sport.getSports(loggedInPlayer);
+      const userRole = player.dataValues.role;
+      console.log(userRole);
       if (request.accepts("html")) {
         response.render("sports", {
           title: "Sports Page",
           playerName,
           allSports,
+          userRole,
           csrfToken: request.csrfToken(),
         });
       } else {
         response.json({ allSports });
       }
     } catch (error) {
-      return this.response.status(422).json(error);
+      console.log(error);
     }
   }
 );
@@ -229,10 +232,12 @@ app.get(
   "/createSport",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    response.render("createSport", {
-      title: "Creating Sports",
-      csrfToken: request.csrfToken(),
-    });
+    if (request.user.role === "admin") {
+      response.render("createSport", {
+        title: "Creating Sports",
+        csrfToken: request.csrfToken(),
+      });
+    }
   }
 );
 
@@ -240,15 +245,19 @@ app.post(
   "/creatingSport",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    try {
-      const sport = await Sport.createSport({
-        name: request.body.name,
-        userId: request.user.id,
-      });
-      console.log(sport.name);
-      return response.redirect("/sports");
-    } catch (error) {
-      console.log(error);
+    if (request.user.role === "admin") {
+      try {
+        const sport = await Sport.createSport({
+          name: request.body.sportsName,
+          userId: request.user.id,
+        });
+        console.log(sport.name);
+        return response.redirect("/sports");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      return response.redirect("/");
     }
   }
 );

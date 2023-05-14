@@ -13,9 +13,13 @@ module.exports = (sequelize, DataTypes) => {
       });
       // define association here
     }
-
-    static getSports() {
-      return this.findAll();
+    static getSports(userId) {
+      return this.findAll({
+        where: {
+          userId,
+        },
+        order: [["id", "ASC"]],
+      });
     }
 
     static createSport({ name, userId }) {
@@ -28,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
   Sport.init(
     {
       name: DataTypes.STRING,
-      userId: DataTypes.STRING,
     },
     {
       sequelize,

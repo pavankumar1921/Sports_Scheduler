@@ -14,7 +14,9 @@
     <div class="grid grid-cols-4">
         <div class="col-start-2 col-span-2">
             <%- include("header.ejs") %>
-            <p class="text-xl flex items-center">Welcome <%= playerName %></p>
+            
+            <% if (userRole === 'admin'){ %>
+                <p class="text-xl flex items-center">Welcome <%= playerName %></p>
             <div>
                 <a href="/signout" class="hover:underline">Signout</a>
             </div>
@@ -28,8 +30,24 @@
                 <h2 class="font-semibold">All Created Sports are:</h2>
             </div>
             <div>
-                <%- include("createdSportsList.ejs") %>
+                <%- include("createdSportsList.ejs",{data:allSports}) %>
             </div>
+            <%}else{ %>
+                <p class="text-xl flex items-center">Welcome <%= playerName %></p>
+            <div>
+                <a href="/signout" class="hover:underline">Signout</a>
+            </div>
+            <div>
+                <a href="#" class="hover:underline">View Reports</a>
+            </div>
+            <div>
+                <h2 class="font-semibold">All Created Sports are:</h2>
+            </div>
+            <div>
+                <%- include("createdSportsList.ejs",{data:allSports}) %>
+            </div>
+            <% } %>
+            
         </div> 
     </div>
 </body>
