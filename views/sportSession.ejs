@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="./css/styles.css" rel="stylesheet">
+    
+    <title>
+        <%=title%>
+    </title>
+</head>
+<body class="bg-green-100">
+    <div class="grid grid-cols-5 grid-rows-5">
+        <div class="col-start-2 col-span-3">
+            <div class="py-5">
+                <h1 class="text-4xl font-semibold text-gray-600"><%=sportName%></h1>
+            </div>
+            <div class="py-4">
+                <h1 class="text-2xl text-gray-600">
+                    Sessions
+                </h1>
+            </div>
+            <div class="grid grid-cols-4">
+                    <% if (userRole === 'admin'){ %>
+                    <div class="col-start-3">
+                        <div class="flex items-center w-fit my-2">
+                              <a href="/sports/<%=sportId %>/edit" class="hover:underline hover:text-gray-600">Edit
+                                <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                                    <path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" />
+                                    <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" />
+                                </svg>  -->
+                            </a>
+                        </div>
+                    </div> 
+                    <div class="col-start-4">
+                        <div class="flex items-center w-fit my-2">
+                            <a href="/deleteSport/<%=sportId %>" class="hover:underline hover:text-gray-600">Delete</a>
+                        </div>
+                    </div>
+                    <% } 
+                    else { %>
+                    <% } %>    
+            </div>
+            <div>
+
+            </div>
+            <div class="py-3">
+                <a href="#" class="hover:underline hover:text-gray-600">Create a new Session</a>
+            </div>
+            <div class="py-3">
+                <a href="#" class="hover:underline hover:text-gray-600">View previous Sessions</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

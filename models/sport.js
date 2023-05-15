@@ -28,6 +28,28 @@ module.exports = (sequelize, DataTypes) => {
         userId,
       });
     }
+
+    static editSport({ name, id }) {
+      return this.update(
+        {
+          name,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
+    }
+
+    static getSport({ userId, id }) {
+      return this.findOne({
+        where: {
+          userId,
+          id,
+        },
+      });
+    }
   }
   Sport.init(
     {

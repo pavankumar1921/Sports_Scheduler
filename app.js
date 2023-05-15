@@ -261,17 +261,63 @@ app.post(
     }
   }
 );
-// const player = await Player.findByPk(request.player.id)
-// // const playerName = player.dataValues.name
-// if (request.accepts("html")){
-//   response.render("createSport",{
-//   title:"creating Sport",
-//   // csrfToken:request.csrfToken(),
-//   // playerName
-// })}else{
-//   return response.json(
-//     // playerName
-// )
-// }
+
+app.get(
+  "/sports/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    const loggedInPlayer = request.user.id;
+    const player = await Player.findByPk(loggedInPlayer);
+    const sport = await Sport.findByPk(request.params.id);
+    const sportId = sport.dataValues.id;
+    const sportName = sport.dataValues.name;
+    const userRole = player.dataValues.role;
+    response.render("sportSession", {
+      title: "Sport Sessions",
+      sportName,
+      userRole,
+      sportId,
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
+
+app.get(
+  "/sports/:id/edit",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    if (request.user.role === "admin") {
+      const sport = await Sport.findByPk(request.params.id);
+      const sportId = sport.dataValues.id;
+      response.render("editSport", {
+        title: "Edit Sport",
+        sportId,
+        csrfToken: request.csrfToken(),
+      });
+    }
+  }
+);
+
+app.post(
+  "/sports/:id/edit",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    if (request.user.role === "admin") {
+      const sport = await Sport.findByPk(request.params.id);
+      const sportId = sport.dataValues.id;
+      try {
+        await Sport.editSport({
+          name: request.body.name,
+          id: sportId,
+        });
+        response.redirect(`/sports`);
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+    }
+  }
+);
+app.get("/deleteSport/:id");
 
 module.exports = app;
