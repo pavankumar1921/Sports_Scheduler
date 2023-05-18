@@ -12,6 +12,22 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "sportId",
       });
     }
+
+    static createSession({
+      time,
+      venue,
+      participants,
+      playersNeeded,
+      sportId,
+    }) {
+      return this.create({
+        time,
+        venue,
+        participants,
+        playersNeeded,
+        sportId,
+      });
+    }
   }
   Session.init(
     {

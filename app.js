@@ -88,8 +88,7 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-const { Player, Sport } = require("./models");
-const { Session } = require("inspector");
+const { Player, Sport, Session } = require("./models");
 
 app.use(function (request, response, next) {
   response.locals.messages = request.flash();
@@ -339,9 +338,10 @@ app.get(
   "/sport/:id/createSession",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    const sportId = request.params.id;
     const sport = await Sport.findByPk(request.params.id);
+    const sportId = request.params.id;
     console.log(sport);
+    console.log(sportId);
     const sportName = sport.dataValues.name;
     response.render("session", {
       title: "Session",
@@ -357,19 +357,22 @@ app.post(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     if (request.user.role === "admin") {
+      const sportId = request.params.id;
       try {
         const allPlayers = request.body.playersJoining;
         const inputPlayers = allPlayers
           .split(",")
           .map((player) => player.trim());
+        console.log(inputPlayers);
+        console.log(sportId);
         const session = await Session.create({
           time: request.body.time,
           venue: request.body.venue,
           participants: inputPlayers,
           playersNeeded: request.body.playersNeeded,
-          sportId: request.params.id,
+          sportId: sportId,
         });
-        return response.redirect("/sport/:id");
+        return response.redirect(`/sport/${request.params.id}`);
       } catch (error) {
         console.log(error);
       }
