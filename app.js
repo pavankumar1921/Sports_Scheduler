@@ -327,27 +327,13 @@ app.delete(
     if (request.user.role === "admin") {
       try {
         const res = await Sport.deleteSport(request.params.id);
-        // return response.json({success: res === 1 })
-        response.redirect("/sports");
+        return response.json({ success: res === 1 });
       } catch (error) {
         return response.status(422).json(error);
       }
     }
   }
 );
-
-// app.post("/deleteSport/:id",connectEnsureLogin.ensureLoggedIn(),async(request,response)=>{
-//   console.log("Deleting sport by id:",request.params.id)
-//   try{
-//     await Sport.deleteSport({
-//       id:request.params.id,
-//       })
-//     // return response.json({success:true})
-//     response.redirect("/sports")
-//   }catch(error){
-//     return response.status(422).json(error)
-//   }
-// });
 
 app.get(
   "/sport/:id/createSession",
