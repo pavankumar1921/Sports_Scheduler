@@ -370,18 +370,23 @@ app.post(
   "/sport/:id/createSession",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    try {
-      const allPlayers = request.body.playersJoining;
-      const inputPlayers = allPlayers.split(",").map((player) => player.trim());
-      const session = await Session.create({
-        time: request.body.time,
-        venue: request.body.venue,
-        participants: inputPlayers,
-        playersNeeded: request.body.playersNeeded,
-      });
-      return response.redirect("/");
-    } catch (error) {
-      console.log(error);
+    if (request.user.role === "admin") {
+      try {
+        const allPlayers = request.body.playersJoining;
+        const inputPlayers = allPlayers
+          .split(",")
+          .map((player) => player.trim());
+        const session = await Session.create({
+          time: request.body.time,
+          venue: request.body.venue,
+          participants: inputPlayers,
+          playersNeeded: request.body.playersNeeded,
+          sportId: request.params.id,
+        });
+        return response.redirect("/sport/:id");
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 );
