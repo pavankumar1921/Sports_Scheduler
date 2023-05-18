@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
       Sport.belongsTo(models.Player, {
         foreignKey: "userId",
       });
+      Sport.hasMany(models.Session, {
+        foreignKey: "sportId",
+      });
       // define association here
     }
     static getSports(userId) {
@@ -40,6 +43,14 @@ module.exports = (sequelize, DataTypes) => {
           },
         }
       );
+    }
+
+    static deleteSport(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
     }
 
     static getSport({ userId, id }) {

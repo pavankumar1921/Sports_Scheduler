@@ -89,6 +89,7 @@ passport.deserializeUser((id, done) => {
 });
 
 const { Player, Sport } = require("./models");
+const { Session } = require("inspector");
 
 app.use(function (request, response, next) {
   response.locals.messages = request.flash();
@@ -318,6 +319,71 @@ app.post(
     }
   }
 );
-app.get("/deleteSport/:id");
+
+app.delete(
+  "/deleteSport/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    if (request.user.role === "admin") {
+      try {
+        const res = await Sport.deleteSport(request.params.id);
+        // return response.json({success: res === 1 })
+        response.redirect("/sports");
+      } catch (error) {
+        return response.status(422).json(error);
+      }
+    }
+  }
+);
+
+// app.post("/deleteSport/:id",connectEnsureLogin.ensureLoggedIn(),async(request,response)=>{
+//   console.log("Deleting sport by id:",request.params.id)
+//   try{
+//     await Sport.deleteSport({
+//       id:request.params.id,
+//       })
+//     // return response.json({success:true})
+//     response.redirect("/sports")
+//   }catch(error){
+//     return response.status(422).json(error)
+//   }
+// });
+
+app.get(
+  "/sport/:id/createSession",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    const sportId = request.params.id;
+    const sport = await Sport.findByPk(request.params.id);
+    console.log(sport);
+    const sportName = sport.dataValues.name;
+    response.render("session", {
+      title: "Session",
+      sportId,
+      sportName,
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
+
+app.post(
+  "/sport/:id/createSession",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const allPlayers = request.body.playersJoining;
+      const inputPlayers = allPlayers.split(",").map((player) => player.trim());
+      const session = await Session.create({
+        time: request.body.time,
+        venue: request.body.venue,
+        participants: inputPlayers,
+        playersNeeded: request.body.playersNeeded,
+      });
+      return response.redirect("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 module.exports = app;
