@@ -270,6 +270,7 @@ app.get(
     const player = await Player.findByPk(loggedInPlayer);
     const sport = await Sport.findByPk(request.params.id);
     const sportId = sport.dataValues.id;
+    const session = await Session.getSessions(sportId);
     const sportName = sport.dataValues.name;
     const userRole = player.dataValues.role;
     response.render("sportSession", {
@@ -277,6 +278,7 @@ app.get(
       sportName,
       userRole,
       sportId,
+      session,
       csrfToken: request.csrfToken(),
     });
   }
@@ -372,10 +374,66 @@ app.post(
           playersNeeded: request.body.playersNeeded,
           sportId: sportId,
         });
-        return response.redirect(`/sport/${request.params.id}`);
+        return response.redirect(`/sports/${request.params.id}`);
       } catch (error) {
         console.log(error);
       }
+    }
+  }
+);
+
+app.get(
+  "/session/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    console.log(request.user);
+    const userId = request.user.id;
+    try {
+      const sessionId = request.params.id;
+      const session = await Session.findByPk(sessionId);
+      const sportId = session.sportId;
+      const sport = await Sport.getSport(sportId);
+      const sportName = sport.name;
+      const sessionTime = session.time;
+      console.log(sessionTime);
+      const sessionVenue = session.venue;
+      const players = session.participants;
+      const allPlayers = players
+        .toString()
+        .split(",")
+        .map((player) => player.trim());
+      const playersList = [];
+      const viewList = [];
+      if (allPlayers.length > 0) {
+        for (let i = 0; i < allPlayers.length; i++) {
+          if (Number(allPlayers[i]).toString() != "NaN") {
+            viewList.push(allPlayers[i]);
+            const player = await Player.findByPk(Number(allPlayers[i]));
+            if (player) {
+              const playerName = player.name;
+              playersList.push(playerName);
+            }
+          }
+        }
+
+        if (request.accepts("html")) {
+          response.render("allSessions", {
+            session,
+            sessionVenue,
+            sessionTime,
+            sportName,
+            players,
+            playersList,
+            viewList,
+            title: "Session",
+            csrfToken: request.csrfToken(),
+          });
+        } else {
+          response.json({ session });
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 );

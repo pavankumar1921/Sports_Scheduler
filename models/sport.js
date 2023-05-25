@@ -1,4 +1,5 @@
 "use strict";
+const { Session } = require("express-session");
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Sport extends Model {
@@ -53,11 +54,10 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static getSport({ userId, id }) {
+    static getSport(sportId) {
       return this.findOne({
         where: {
-          userId,
-          id,
+          id: sportId,
         },
       });
     }

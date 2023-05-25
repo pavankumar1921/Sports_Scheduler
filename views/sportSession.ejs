@@ -62,6 +62,7 @@
             <div class="py-3">
                 <a href="/sport/<%= sportId %>/createSession" class="hover:underline hover:text-gray-600">Create a new Session</a>
             </div>
+            <%- include("sessionList.ejs",{data:session}) %>
             <div class="py-3">
                 <a href="#" class="hover:underline hover:text-gray-600">View previous Sessions</a>
             </div>

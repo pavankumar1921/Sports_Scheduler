@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="./css/styles.css" rel="stylesheet">
+    <title><%=title %></title>
+</head>
+<body class="bg-green-100">
+    <div class="grid-cols-4">
+        <div class="col-start-2 col-span-2">
+            <h1><%=sportName %> Session</h1>
+        </div>
+        <div>
+            <a href="#">Delete Session</a>
+        </div>
+        <div>
+            <h3>This session is scheduled for <%= sessionTime %>, to be played at "<%=sessionVenue%>" </h3>
+        </div>
+        <h2>Players in session are:</h2>
+        <div>
+            <ul class="list-none">
+              <% for(var i=0;i<players.length;i++) {%>
+                <li class="players">
+                    <div class="flex w-fit my-2 px-2 py-1 items-center hover:bg-purple-50 rounded">
+                        <label class="ml-2 text-sm text-gray-600 cursor-pointer"><%= players[i] %></label>
+                    </div>
+
+                </li>
+            <%} %>
+            </ul>
+        </div>
+        <div></div>
+    </div>
+    
+</body>
+</html>

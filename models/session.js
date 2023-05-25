@@ -28,6 +28,14 @@ module.exports = (sequelize, DataTypes) => {
         sportId,
       });
     }
+
+    static getSessions(sportId) {
+      return this.findAll({
+        where: {
+          sportId,
+        },
+      });
+    }
   }
   Session.init(
     {
