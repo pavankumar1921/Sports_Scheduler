@@ -29,6 +29,14 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static deleteSession(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
+    }
+
     static getSessions(sportId) {
       return this.findAll({
         where: {

@@ -392,6 +392,7 @@ app.get(
       const sessionId = request.params.id;
       const session = await Session.findByPk(sessionId);
       const sportId = session.sportId;
+      console.log(sportId);
       const sport = await Sport.getSport(sportId);
       const sportName = sport.name;
       const sessionTime = session.time;
@@ -422,6 +423,8 @@ app.get(
             sessionVenue,
             sessionTime,
             sportName,
+            sessionId,
+            sportId,
             players,
             playersList,
             viewList,
@@ -434,6 +437,19 @@ app.get(
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+);
+
+app.delete(
+  "/deleteSession/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const res = await Session.deleteSession(request.params.id);
+      return response.json({ success: res === 1 });
+    } catch (error) {
+      return response.status(422).json(error);
     }
   }
 );
