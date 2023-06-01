@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
     <meta name="sportId" content="<%=sportId%>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="./css/styles.css" rel="stylesheet">
     <script>
         var token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
         var sportId = document.querySelector('meta[name="sportId"]').getAttribute("content")
+        var sessionId = document.querySelector('meta[name="sessionId"]').getAttribute("content")
         function deleteSession(id) {
             fetch(`/deleteSession/${id}`, {
                 method: "delete",
@@ -23,6 +25,33 @@
                 }
             }).catch((err) => console.error(err))
         }
+        function joinSession(id) {
+            fetch(`/joinSession/${id}`, {
+                method: "put",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    "_csrf": token
+                })
+            }).then((res) => {
+                if (res.ok) {
+                    window.location.reload()
+                }
+            }).catch((err) => console.error(err))
+        }
+        function leaveSession(id) {
+            fetch(`/leaveSession/${id}`, {
+                method: "put",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    "_csrf": token
+                })
+            }).then((res) => {
+                if (res.ok) {
+                    window.location.reload()
+                }
+            }).catch((err) => console.error(err))
+        }
+    
     </script>
     <title><%=title %></title>
 </head>
@@ -50,9 +79,9 @@
                             <%} %>
                 </div>
             </div>
-            <div class="relative inline-block py-3 flex-auto justify-center space-x-1">
-                          <a href="#" class="text-white bg-green-600 hover:bg-green-800 font-medium rounded px-3 py-1.5 justify-right hover:underline hover:text-gray-600">Join</a>
-                          <a href="#" class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-3 py-1.5 justify-right hover:underline hover:text-gray-600">Leave</a>   
+            <div class="relative inline-block py-3 flex-auto cursor-pointer justify-center space-x-1">
+                          <a onclick="joinSession(<%=sessionId%>)" class="text-white bg-green-600 hover:bg-green-800 font-medium rounded px-3 py-1.5 justify-right hover:underline hover:text-gray-600">Join</a>
+                          <a  onclick="leaveSession(<%=sessionId%>)" class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-3 py-1.5 justify-right hover:underline hover:text-gray-600">Leave</a>   
             </div> 
         </div>
     </div>

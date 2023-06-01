@@ -389,6 +389,10 @@ app.get(
     console.log(request.user);
     const userId = request.user.id;
     try {
+      const loggedInPlayer = request.user.id;
+      const player = await Player.findByPk(loggedInPlayer);
+      const playerName = player.dataValues.name;
+      console.log(playerName);
       const sessionId = request.params.id;
       const session = await Session.findByPk(sessionId);
       const sportId = session.sportId;
@@ -425,6 +429,9 @@ app.get(
             sportName,
             sessionId,
             sportId,
+
+            playerName,
+            userId: request.user.id,
             players,
             playersList,
             viewList,
@@ -454,4 +461,64 @@ app.delete(
   }
 );
 
+app.put(
+  "/joinSession/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const sessionId = request.params.id;
+      const session = await Session.findByPk(request.params.id);
+      console.log(session.participants);
+      const user = await Player.findByPk(request.user.id);
+      const userName = user.name;
+      console.log(userName);
+      const participants = session.participants;
+
+      console.log(participants);
+      if (participants.length > 0) {
+        if (participants != userName) {
+          session.participants.push(request.user.name);
+          console.log(session.participants);
+        }
+      }
+
+      const join = await Session.joinSession(
+        session.participants,
+        request.params.id
+      );
+      return response.json(join);
+    } catch (error) {
+      return response.status(422).json(error);
+    }
+  }
+);
+
+app.put(
+  "/leaveSession/:id",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    try {
+      const user = await Player.findByPk(request.user.id);
+      const userName = user.name;
+      const sessionId = request.params.id;
+      const session = await Session.findByPk(request.params.id);
+      console.log(session.participants);
+      console.log(request.user.name);
+      const participants = session.participants;
+      console.log(participants);
+      const index = session.participants.indexOf(userName);
+      console.log(index);
+      session.participants.splice(index, 1);
+      // session.participants.pop(request.user.name)
+      console.log(session.participants);
+      const leave = await Session.leaveSession(
+        session.participants,
+        request.params.id
+      );
+      return response.json(leave);
+    } catch (error) {
+      return response.status(422).json(error);
+    }
+  }
+);
 module.exports = app;

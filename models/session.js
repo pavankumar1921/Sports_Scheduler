@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "sportId",
       });
     }
+    static associate(models) {
+      Session.belongsTo(models.Player, {
+        foreignKey: "userId",
+      });
+    }
 
     static createSession({
       time,
@@ -35,6 +40,32 @@ module.exports = (sequelize, DataTypes) => {
           id,
         },
       });
+    }
+
+    static joinSession(participants, id) {
+      return this.update(
+        {
+          participants,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
+    }
+
+    static leaveSession(participants, id) {
+      return this.update(
+        {
+          participants,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
     }
 
     static getSessions(sportId) {

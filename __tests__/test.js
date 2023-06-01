@@ -23,7 +23,7 @@ const login = async (agent, username, password) => {
 describe("Sports Scheduler", function () {
   beforeAll(async () => {
     await db.sequelize.sync({ force: true });
-    server = app.listen(4000, () => {});
+    server = app.listen(8000, () => {});
     agent = request.agent(server);
   });
   afterAll(async () => {
