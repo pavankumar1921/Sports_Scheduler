@@ -68,6 +68,12 @@ module.exports = (sequelize, DataTypes) => {
       );
     }
 
+    static getParticipant(userName) {
+      const playerName = Session.participants.find(
+        (player) => player.name === userName
+      );
+      return playerName ? null : userName;
+    }
     static getSessions(sportId) {
       return this.findAll({
         where: {

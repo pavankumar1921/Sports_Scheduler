@@ -468,20 +468,23 @@ app.put(
     try {
       const sessionId = request.params.id;
       const session = await Session.findByPk(request.params.id);
-      console.log(session.participants);
+      console.log("ses_part", session.participants);
       const user = await Player.findByPk(request.user.id);
       const userName = user.name;
       console.log(userName);
       const participants = session.participants;
 
       console.log(participants);
+      //for(let i=0;i<participants.length;i++){
       if (participants.length > 0) {
-        if (participants != userName) {
+        if (participants.includes(userName)) {
+          console.log("a", session.participants);
+        } else {
           session.participants.push(request.user.name);
           console.log(session.participants);
         }
       }
-
+      //}
       const join = await Session.joinSession(
         session.participants,
         request.params.id
@@ -505,10 +508,14 @@ app.put(
       console.log(session.participants);
       console.log(request.user.name);
       const participants = session.participants;
-      console.log(participants);
-      const index = session.participants.indexOf(userName);
-      console.log(index);
-      session.participants.splice(index, 1);
+      if (participants.length > 0) {
+        if (participants.includes(userName)) {
+          const index = session.participants.indexOf(userName);
+          session.participants.splice(index, 1);
+        } else {
+          console.log(session.participants);
+        }
+      }
       // session.participants.pop(request.user.name)
       console.log(session.participants);
       const leave = await Session.leaveSession(
