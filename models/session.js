@@ -34,6 +34,19 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    static removePlayer(participants, id) {
+      return this.update(
+        {
+          participants,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
+    }
+
     static deleteSession(id) {
       return this.destroy({
         where: {

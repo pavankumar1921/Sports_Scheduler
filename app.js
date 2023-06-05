@@ -403,6 +403,7 @@ app.get(
       console.log(sessionTime);
       const sessionVenue = session.venue;
       const players = session.participants;
+      console.log("players", players);
       // const playerId = session,participants.findIndex
       const allPlayers = players
         .toString()
@@ -410,6 +411,7 @@ app.get(
         .map((player) => player.trim());
       const playersList = [];
       const viewList = [];
+      console.log("allPlayers", allPlayers);
       if (allPlayers.length > 0) {
         for (let i = 0; i < allPlayers.length; i++) {
           if (Number(allPlayers[i]).toString() != "NaN") {
@@ -421,27 +423,28 @@ app.get(
             }
           }
         }
-
-        if (request.accepts("html")) {
-          response.render("allSessions", {
-            session,
-            sessionVenue,
-            sessionTime,
-            sportName,
-            sessionId,
-            sportId,
-            allPlayers,
-            playerName,
-            userId: request.user.id,
-            players,
-            playersList,
-            viewList,
-            title: "Session",
-            csrfToken: request.csrfToken(),
-          });
-        } else {
-          response.json({ session });
-        }
+      }
+      console.log("playersList", playersList);
+      console.log("viewList", viewList);
+      if (request.accepts("html")) {
+        response.render("allSessions", {
+          session,
+          sessionVenue,
+          sessionTime,
+          sportName,
+          sessionId,
+          sportId,
+          allPlayers,
+          playerName,
+          userId: request.user.id,
+          players,
+          playersList,
+          viewList,
+          title: "Session",
+          csrfToken: request.csrfToken(),
+        });
+      } else {
+        response.json({ session });
       }
     } catch (error) {
       console.log(error);
@@ -530,27 +533,35 @@ app.put(
   }
 );
 
-app.delete(
-  "removePlayer/:sessionId/:playerId",
+app.put(
+  "/removePlayer/:id",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    const sessionId = request.params.sessionId;
-    const playerId = parseInt(request.params.playerId);
     try {
-      const session = await Session.findById(sessionId);
-      if (!session) {
-        return response.status(404).json({ error: "Session not found" });
+      console.log(request.body.playerName);
+      const playerName = request.body.playerName;
+      console.log(playerName);
+      const session = await Session.findByPk(request.params.id);
+      const participants = session.participants;
+      if (participants.length > 0) {
+        if (participants.includes(playerName)) {
+          const index = session.participants.indexOf(playerName);
+          session.participants.splice(index, 1);
+        } else {
+          console.log(session.participants);
+        }
       }
-      //  const playerIndex = session.participants.findIndex(player=>player.id === playerId)
-      //  if(playerIndex !== -1){
-      //   const res = session.participants.splice(playerIndex,1)
-      //   await session.save()
-      const res = await Session.removePlayer(sessionId, playerId);
-      return response.json({ success: res === 1 });
-      //  }
+
+      console.log(session.participants);
+      const removed = await Session.removePlayer(
+        session.participants,
+        request.params.id
+      );
+      return response.json(removed);
     } catch (error) {
       return response.status(422).json(error);
     }
   }
 );
+
 module.exports = app;
