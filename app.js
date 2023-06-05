@@ -564,4 +564,32 @@ app.put(
   }
 );
 
+app.get(
+  "/updatePassword",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    response.render("updatePassword", {
+      title: "Change Password",
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
+
+app.post(
+  "/updatePassword",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    const player = await Player.findOne({
+      where: { id: request.user.id },
+    });
+    const newPassword = await bcrypt.hash(request.body.newPassword, saltRounds);
+    if (request.body.newPassword == request.body.reEnterPassword) {
+      await player.update({ password: newPassword });
+      return response.redirect("/sports");
+    } else {
+      request.flash("error", "Passwords do not match,ReEnter again");
+      response.redirect("/updatePassword");
+    }
+  }
+);
 module.exports = app;

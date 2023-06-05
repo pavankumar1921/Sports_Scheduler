@@ -17,9 +17,13 @@
             
             <% if (userRole === 'admin'){ %>
                 <p class="text-xl flex items-center">Welcome <%= playerName %></p>
+                <div>
+                    <a href="/updatePassword" class="hover:underline">Change Password</a>
+                </div>
             <div>
                 <a href="/signout" class="hover:underline">Signout</a>
             </div>
+
             <div>
                 <a href="/createSport" class="hover:underline"> Create a New Sport</a>
             </div>
