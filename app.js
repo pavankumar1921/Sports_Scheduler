@@ -403,6 +403,7 @@ app.get(
       console.log(sessionTime);
       const sessionVenue = session.venue;
       const players = session.participants;
+      // const playerId = session,participants.findIndex
       const allPlayers = players
         .toString()
         .split(",")
@@ -429,7 +430,7 @@ app.get(
             sportName,
             sessionId,
             sportId,
-
+            allPlayers,
             playerName,
             userId: request.user.id,
             players,
@@ -523,6 +524,30 @@ app.put(
         request.params.id
       );
       return response.json(leave);
+    } catch (error) {
+      return response.status(422).json(error);
+    }
+  }
+);
+
+app.delete(
+  "removePlayer/:sessionId/:playerId",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    const sessionId = request.params.sessionId;
+    const playerId = parseInt(request.params.playerId);
+    try {
+      const session = await Session.findById(sessionId);
+      if (!session) {
+        return response.status(404).json({ error: "Session not found" });
+      }
+      //  const playerIndex = session.participants.findIndex(player=>player.id === playerId)
+      //  if(playerIndex !== -1){
+      //   const res = session.participants.splice(playerIndex,1)
+      //   await session.save()
+      const res = await Session.removePlayer(sessionId, playerId);
+      return response.json({ success: res === 1 });
+      //  }
     } catch (error) {
       return response.status(422).json(error);
     }
