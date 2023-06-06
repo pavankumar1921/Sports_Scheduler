@@ -209,6 +209,9 @@ app.get(
       const player = await Player.findByPk(loggedInPlayer);
       const playerName = player.dataValues.name;
       const allSports = await Sport.getSports(loggedInPlayer);
+      console.log("b", allSports);
+      const playerSports = await Sport.allSports();
+      console.log("a", playerSports);
       const userRole = player.dataValues.role;
       console.log(userRole);
       if (request.accepts("html")) {
@@ -216,6 +219,7 @@ app.get(
           title: "Sports Page",
           playerName,
           allSports,
+          playerSports,
           userRole,
           csrfToken: request.csrfToken(),
         });
@@ -269,7 +273,10 @@ app.get(
     const loggedInPlayer = request.user.id;
     const player = await Player.findByPk(loggedInPlayer);
     const sport = await Sport.findByPk(request.params.id);
+    // const sports = await Sport.getSports()
+    console;
     const sportId = sport.dataValues.id;
+    console.log(sportId);
     const session = await Session.getSessions(sportId);
     const sportName = sport.dataValues.name;
     const userRole = player.dataValues.role;
@@ -277,6 +284,7 @@ app.get(
       title: "Sport Sessions",
       sportName,
       userRole,
+      // sports,
       sportId,
       session,
       csrfToken: request.csrfToken(),
@@ -328,7 +336,7 @@ app.delete(
     if (request.user.role === "admin") {
       try {
         const res = await Sport.deleteSport(request.params.id);
-        return response.json({ success: res === 1 });
+        return response.json(res);
       } catch (error) {
         return response.status(422).json(error);
       }
@@ -358,26 +366,22 @@ app.post(
   "/sport/:id/createSession",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    if (request.user.role === "admin") {
-      const sportId = request.params.id;
-      try {
-        const allPlayers = request.body.playersJoining;
-        const inputPlayers = allPlayers
-          .split(",")
-          .map((player) => player.trim());
-        console.log(inputPlayers);
-        console.log(sportId);
-        const session = await Session.create({
-          time: request.body.time,
-          venue: request.body.venue,
-          participants: inputPlayers,
-          playersNeeded: request.body.playersNeeded,
-          sportId: sportId,
-        });
-        return response.redirect(`/sports/${request.params.id}`);
-      } catch (error) {
-        console.log(error);
-      }
+    const sportId = request.params.id;
+    try {
+      const allPlayers = request.body.playersJoining;
+      const inputPlayers = allPlayers.split(",").map((player) => player.trim());
+      console.log(inputPlayers);
+      console.log(sportId);
+      const session = await Session.create({
+        time: request.body.time,
+        venue: request.body.venue,
+        participants: inputPlayers,
+        playersNeeded: request.body.playersNeeded,
+        sportId: sportId,
+      });
+      return response.redirect(`/sports/${request.params.id}`);
+    } catch (error) {
+      console.log(error);
     }
   }
 );
@@ -593,5 +597,22 @@ app.post(
       response.redirect("/updatePassword");
     }
   }
+);
+
+app.get(
+  "/cancelSession",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, res) => {
+    res.render("cancelSession", {
+      title: "Cancel Session",
+      csrfToken: req.csrfToken(),
+    });
+  }
+);
+
+app.post(
+  "/cancelSession",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (req, res) => {}
 );
 module.exports = app;

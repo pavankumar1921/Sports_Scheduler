@@ -81,6 +81,7 @@
             </div>
             <div class="rounded w-fit px-2 py-1 flex gap-2 cursor-pointer hover:text-600">
                 <a onclick="deleteSession(<%= sessionId %>)" class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-3 py-1.5 justify-right">Delete Session</a>
+                <a href="/cancelSession" class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-3 py-1.5 justify-right">Cancel Session</a>
             </div>
             <div class="py-3">
                 <h3>This session is scheduled for <%= sessionTime %>, to be played at "<%=sessionVenue%>" </h3>

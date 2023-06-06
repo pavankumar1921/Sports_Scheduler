@@ -25,6 +25,9 @@ module.exports = (sequelize, DataTypes) => {
         order: [["id", "ASC"]],
       });
     }
+    static allSports() {
+      return this.findAll();
+    }
 
     static createSport({ name, userId }) {
       return this.create({
