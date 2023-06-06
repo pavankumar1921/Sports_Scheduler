@@ -395,16 +395,18 @@ app.get(
       console.log(playerName);
       const sessionId = request.params.id;
       const session = await Session.findByPk(sessionId);
+      console.log(session);
       const sportId = session.sportId;
       console.log(sportId);
       const sport = await Sport.getSport(sportId);
       const sportName = sport.name;
       const sessionTime = session.time;
+
       console.log(sessionTime);
+      console.log("status", session.status);
       const sessionVenue = session.venue;
       const players = session.participants;
       console.log("players", players);
-      // const playerId = session,participants.findIndex
       const allPlayers = players
         .toString()
         .split(",")

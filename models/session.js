@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const { Sequelize } = require(".");
 module.exports = (sequelize, DataTypes) => {
   class Session extends Model {
     /**
@@ -11,13 +12,13 @@ module.exports = (sequelize, DataTypes) => {
       Session.belongsTo(models.Sport, {
         foreignKey: "sportId",
       });
+      // define association here
     }
     static associate(models) {
       Session.belongsTo(models.Player, {
         foreignKey: "userId",
       });
     }
-
     static createSession({
       time,
       venue,
@@ -95,6 +96,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
+
   Session.init(
     {
       time: DataTypes.DATE,
@@ -102,6 +104,7 @@ module.exports = (sequelize, DataTypes) => {
       participants: DataTypes.ARRAY(DataTypes.STRING),
       playersNeeded: DataTypes.INTEGER,
       sportId: DataTypes.INTEGER,
+      status: DataTypes.STRING,
     },
     {
       sequelize,

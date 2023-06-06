@@ -24,6 +24,11 @@ module.exports = {
       sportId: {
         type: Sequelize.INTEGER,
       },
+      status: {
+        type: Sequelize.STRING,
+        isIn: [["running", "cancelled"]],
+        defaultValue: "running",
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

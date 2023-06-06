@@ -23,7 +23,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn("Sports", "userId");
+    await queryInterface.removeColumn("Sessions", "userId");
     /**
      * Add reverting commands here.
      *
