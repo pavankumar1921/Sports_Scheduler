@@ -29,6 +29,10 @@ module.exports = {
         isIn: [["running", "cancelled"]],
         defaultValue: "running",
       },
+      reason: {
+        type: Sequelize.STRING,
+        defaultValue: null,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

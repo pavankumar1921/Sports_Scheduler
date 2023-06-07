@@ -105,6 +105,7 @@ module.exports = (sequelize, DataTypes) => {
       playersNeeded: DataTypes.INTEGER,
       sportId: DataTypes.INTEGER,
       status: DataTypes.STRING,
+      reason: DataTypes.STRING,
     },
     {
       sequelize,

@@ -89,6 +89,7 @@ passport.deserializeUser((id, done) => {
 });
 
 const { Player, Sport, Session } = require("./models");
+const { error } = require("console");
 
 app.use(function (request, response, next) {
   response.locals.messages = request.flash();
@@ -285,6 +286,7 @@ app.get(
       sportName,
       userRole,
       // sports,
+
       sportId,
       session,
       csrfToken: request.csrfToken(),
@@ -411,6 +413,7 @@ app.get(
       const sessionVenue = session.venue;
       const players = session.participants;
       console.log("players", players);
+      console.log("reason", session.reason);
       const allPlayers = players
         .toString()
         .split(",")
@@ -600,19 +603,31 @@ app.post(
 );
 
 app.get(
-  "/cancelSession",
+  "/session/:id/cancelSession",
   connectEnsureLogin.ensureLoggedIn(),
   async (req, res) => {
     res.render("cancelSession", {
       title: "Cancel Session",
       csrfToken: req.csrfToken(),
+      sessionId: req.params.id,
     });
   }
 );
 
 app.post(
-  "/cancelSession",
+  "/session/:id/cancelSession",
   connectEnsureLogin.ensureLoggedIn(),
-  async (req, res) => {}
+  async (req, res) => {
+    try {
+      const session = await Session.findByPk(req.params.id);
+      const sportId = session.sportId;
+      console.log(sportId);
+      console.log(req.body.cancel);
+      await session.update({ reason: req.body.cancel });
+      return res.redirect(`/sports/${sportId}`);
+    } catch {
+      console.log(error);
+    }
+  }
 );
 module.exports = app;

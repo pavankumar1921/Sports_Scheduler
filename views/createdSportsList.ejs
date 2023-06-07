@@ -8,7 +8,7 @@
     <% for (let i=0; i<allSports.length; i++) {%>
         <li>
             <div class="text-gray-600">
-                <h3><a href="/sports/<%=allSports[i].id %>" class="hover:underline"><%= i+1 %>. <%= PlayerSports[i].name %></a></h3>
+                <h3><a href="/sports/<%=allSports[i].id %>" class="hover:underline"><%= i+1 %>. <%= allSports[i].name %></a></h3>
             </div>
         </li>
     <% } %>
