@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       participants,
       playersNeeded,
       sportId,
+      userId,
     }) {
       return this.create({
         time,
@@ -32,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         participants,
         playersNeeded,
         sportId,
+        userId,
       });
     }
 
@@ -87,6 +89,9 @@ module.exports = (sequelize, DataTypes) => {
         (player) => player.name === userName
       );
       return playerName ? null : userName;
+    }
+    static getAllSessions() {
+      return this.findAll();
     }
     static getSessions(sportId) {
       return this.findAll({

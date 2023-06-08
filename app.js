@@ -209,10 +209,22 @@ app.get(
       const loggedInPlayer = request.user.id;
       const player = await Player.findByPk(loggedInPlayer);
       const playerName = player.dataValues.name;
+      console.log(playerName);
       const allSports = await Sport.getSports(loggedInPlayer);
       console.log("b", allSports);
       const playerSports = await Sport.allSports();
       console.log("a", playerSports);
+      const sessions = await Session.getAllSessions();
+      console.log("sessions", sessions);
+      console.log(sessions[0].participants);
+      const ses = [];
+      if (sessions.length > 0) {
+        for (let i = 0; i < sessions.length; i++) {
+          // console.log(sessions[1].participants)
+          if (sessions[i].participants.includes(playerName)) ses.push(i);
+        }
+      }
+      console.log("ses", ses);
       const userRole = player.dataValues.role;
       console.log(userRole);
       if (request.accepts("html")) {
@@ -370,6 +382,7 @@ app.post(
   async (request, response) => {
     const sportId = request.params.id;
     try {
+      console.log(request.user.id);
       const allPlayers = request.body.playersJoining;
       const inputPlayers = allPlayers.split(",").map((player) => player.trim());
       console.log(inputPlayers);
@@ -380,6 +393,7 @@ app.post(
         participants: inputPlayers,
         playersNeeded: request.body.playersNeeded,
         sportId: sportId,
+        userId: request.user.id,
       });
       return response.redirect(`/sports/${request.params.id}`);
     } catch (error) {
@@ -623,7 +637,8 @@ app.post(
       const sportId = session.sportId;
       console.log(sportId);
       console.log(req.body.cancel);
-      await session.update({ reason: req.body.cancel });
+      await session.update({ reason: req.body.cancel, status: "cancelled" });
+
       return res.redirect(`/sports/${sportId}`);
     } catch {
       console.log(error);

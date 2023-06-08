@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       // define association here
     }
+
     static getSports(userId) {
       return this.findAll({
         where: {
