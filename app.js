@@ -216,15 +216,20 @@ app.get(
       console.log("a", playerSports);
       const sessions = await Session.getAllSessions();
       console.log("sessions", sessions);
-      console.log(sessions[0].participants);
-      const ses = [];
+      console.log(sessions[0].time);
+      const currentTime = new Date();
+      console.log(currentTime);
+      const upcomingSessions = [];
       if (sessions.length > 0) {
         for (let i = 0; i < sessions.length; i++) {
-          // console.log(sessions[1].participants)
-          if (sessions[i].participants.includes(playerName)) ses.push(i);
+          if (sessions[i].time > currentTime) {
+            upcomingSessions.push(sessions[i]);
+          }
         }
       }
-      console.log("ses", ses);
+      console.log(sessions[3].time);
+      console.log("upcomingSessions", upcomingSessions);
+      console.log(upcomingSessions[1]);
       const userRole = player.dataValues.role;
       console.log(userRole);
       if (request.accepts("html")) {
@@ -234,6 +239,7 @@ app.get(
           allSports,
           playerSports,
           userRole,
+          upcomingSessions,
           csrfToken: request.csrfToken(),
         });
       } else {
