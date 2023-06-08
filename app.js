@@ -432,6 +432,7 @@ app.get(
       console.log("status", session.status);
       const sessionVenue = session.venue;
       const players = session.participants;
+      const currentTime = new Date();
       console.log("players", players);
       console.log("reason", session.reason);
       const allPlayers = players
@@ -460,6 +461,7 @@ app.get(
           session,
           sessionVenue,
           sessionTime,
+          currentTime,
           sportName,
           sessionId,
           sportId,
