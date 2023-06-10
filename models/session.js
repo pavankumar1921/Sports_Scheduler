@@ -100,6 +100,21 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
+    static runningSessions() {
+      return this.findAll({
+        where: {
+          status: "running",
+        },
+      });
+    }
+
+    static cancelledSessions() {
+      return this.findAll({
+        where: {
+          status: "cancelled",
+        },
+      });
+    }
   }
 
   Session.init(

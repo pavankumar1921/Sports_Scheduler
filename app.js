@@ -653,4 +653,27 @@ app.post(
     }
   }
 );
+
+app.get(
+  "/reports",
+  connectEnsureLogin.ensureLoggedIn(),
+  async (request, response) => {
+    const userRole = request.user.role;
+    const allSports = await Sport.getSports(request.user.id);
+    const playerSports = await Sport.allSports();
+    const sessions = await Session.getAllSessions();
+    const runningSessions = await Session.runningSessions();
+    const cancelledSessions = await Session.cancelledSessions();
+    response.render("reports", {
+      title: "Reports",
+      userRole,
+      allSports,
+      playerSports,
+      sessions,
+      runningSessions,
+      cancelledSessions,
+      csrfToken: request.csrfToken(),
+    });
+  }
+);
 module.exports = app;
