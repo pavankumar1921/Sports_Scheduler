@@ -16,7 +16,13 @@
                 </span><br>
                 <span class="text-red-500">
                     <%=session[i].playersNeeded%> slots available!
-                </span>
+                </span><br>
+                <% if(session[i].status==="cancelled" && session[i].participants.includes(playerName)) {%>
+                    <span>
+                        <b><%=session[i].reason%> yes</b>
+                    </span>
+                <%} %>
+                
             </a>
                 
             </div>

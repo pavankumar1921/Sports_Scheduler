@@ -36,6 +36,18 @@
             <div>
                 <%- include("createdSportsList.ejs",{data:allSports}) %>
             </div>
+            <div>
+                <h2 class="font-semibold">Your upcoming sessions are:</h2>
+                <%- include("sessionList.ejs",{session:upcomingSessions}) %>
+            </div>
+            <div>
+                <h2 class="font-semibold"> Cancelled Sessions are:</h2>
+            
+
+                    <%- include("sessionList.ejs",{session:cancelledSessions,playerName:playerName}) %>
+               
+                
+            </div>
             <%}else{ %>
                 <p class="text-xl flex items-center">Welcome <%= playerName %></p>
             <div>
@@ -52,8 +64,15 @@
                 <h2 class="font-semibold">Your upcoming sessions are:</h2>
                 <%- include("sessionList.ejs",{session:upcomingSessions}) %>
             </div>
-            <% } %>
+            <div>
+                <h2 class="font-semibold"> Cancelled Sessions are:</h2>
             
+
+                    <%- include("sessionList.ejs",{session:cancelledSessions,playerName:playerName}) %>
+               
+                
+            </div>
+            <% } %>
         </div> 
     </div>
 </body>

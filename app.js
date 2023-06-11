@@ -210,6 +210,7 @@ app.get(
       const player = await Player.findByPk(loggedInPlayer);
       const playerName = player.dataValues.name;
       console.log(playerName);
+      console.log(playerName);
       const allSports = await Sport.getSports(loggedInPlayer);
       console.log("b", allSports);
       const playerSports = await Sport.allSports();
@@ -220,16 +221,21 @@ app.get(
       const currentTime = new Date();
       console.log(currentTime);
       const upcomingSessions = [];
+      const cancelledSessions = [];
       if (sessions.length > 0) {
         for (let i = 0; i < sessions.length; i++) {
-          if (sessions[i].time > currentTime) {
+          if (
+            sessions[i].time > currentTime &&
+            sessions[i].status == "running"
+          ) {
             upcomingSessions.push(sessions[i]);
+          } else {
+            cancelledSessions.push(sessions[i]);
           }
         }
       }
       console.log(sessions[3].time);
       console.log("upcomingSessions", upcomingSessions);
-      console.log(upcomingSessions[1]);
       const userRole = player.dataValues.role;
       console.log(userRole);
       if (request.accepts("html")) {
@@ -239,6 +245,7 @@ app.get(
           allSports,
           playerSports,
           userRole,
+          cancelledSessions,
           upcomingSessions,
           csrfToken: request.csrfToken(),
         });
@@ -291,6 +298,7 @@ app.get(
   async (request, response) => {
     const loggedInPlayer = request.user.id;
     const player = await Player.findByPk(loggedInPlayer);
+    const playerName = player.dataValues.name;
     const sport = await Sport.findByPk(request.params.id);
     // const sports = await Sport.getSports()
     console;
@@ -303,8 +311,7 @@ app.get(
       title: "Sport Sessions",
       sportName,
       userRole,
-      // sports,
-
+      playerName,
       sportId,
       session,
       csrfToken: request.csrfToken(),
