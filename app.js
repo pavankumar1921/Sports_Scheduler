@@ -152,8 +152,6 @@ app.post("/players", async (request, response) => {
   }
   const submitValue = request.body.submit;
   const hashedPassword = await bcrypt.hash(request.body.password, saltRounds);
-  console.log(hashedPassword);
-  console.log(request.body);
   try {
     if (submitValue === "admin") {
       const admin = await Player.create({
@@ -200,16 +198,10 @@ app.get(
       const loggedInPlayer = request.user.id;
       const player = await Player.findByPk(loggedInPlayer);
       const playerName = player.dataValues.name;
-      console.log(playerName);
-      console.log(playerName);
       const allSports = await Sport.getSports(loggedInPlayer);
-      console.log("b", allSports);
       const playerSports = await Sport.allSports();
-      console.log("a", playerSports);
       const sessions = await Session.getAllSessions();
-      console.log("sessions", sessions);
       const currentTime = new Date();
-      console.log(currentTime);
       const upcomingSessions = [];
       const cancelledSessions = [];
       if (sessions.length > 0) {
@@ -382,11 +374,8 @@ app.post(
   async (request, response) => {
     const sportId = request.params.id;
     try {
-      console.log(request.user.id);
       const allPlayers = request.body.playersJoining;
       const inputPlayers = allPlayers?.split(",").map((player) => player.trim());
-      console.log(inputPlayers);
-      console.log(sportId);
       const session = await Session.create({
         time: request.body.time,
         venue: request.body.venue,
@@ -406,7 +395,6 @@ app.get(
   "/session/:id",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    console.log(request.user);
     const userId = request.user.id;
     try {
       const loggedInPlayer = request.user.id;
@@ -488,18 +476,14 @@ app.put(
     try {
       const sessionId = request.params.id;
       const session = await Session.findByPk(request.params.id);
-      console.log("ses_part", session.participants);
       const user = await Player.findByPk(request.user.id);
       const userName = user.name;
-      console.log(userName);
       const participants = session.participants;
-      console.log(participants);
       if (participants.length > 0) {
         if (participants.includes(userName)) {
           console.log("a", session.participants);
         } else {
           session.participants.push(request.user.name);
-          console.log(session.participants);
         }
       }
       const join = await Session.joinSession(
@@ -522,8 +506,6 @@ app.put(
       const userName = user.name;
       const sessionId = request.params.id;
       const session = await Session.findByPk(request.params.id);
-      console.log(session.participants);
-      console.log(request.user.name);
       const participants = session.participants;
       if (participants.length > 0) {
         if (participants.includes(userName)) {
@@ -550,9 +532,7 @@ app.put(
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
     try {
-      console.log(request.body.playerName);
       const playerName = request.body.playerName;
-      console.log(playerName);
       const session = await Session.findByPk(request.params.id);
       const participants = session.participants;
       if (participants.length > 0) {
