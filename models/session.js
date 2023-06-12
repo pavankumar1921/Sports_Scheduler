@@ -90,9 +90,19 @@ module.exports = (sequelize, DataTypes) => {
       );
       return playerName ? null : userName;
     }
+
+    static mySessions(userId){
+      return this.findAll({
+        where:{
+          userId
+        }
+      })
+    }
+
     static getAllSessions() {
       return this.findAll();
     }
+
     static getSessions(sportId) {
       return this.findAll({
         where: {
@@ -100,6 +110,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
     }
+
     static runningSessions() {
       return this.findAll({
         where: {

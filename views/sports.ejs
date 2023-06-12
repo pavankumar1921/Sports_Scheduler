@@ -35,6 +35,11 @@
                         <%- include("createdSportsList.ejs") %>
                     </div>
                 <%}%>
+                <div>
+                    <a href="/mySessions" class="text-xl text-black font-semibold hover:underline">view my sessions</a>
+                </div>
+                
+
                 <div class="py-3">
                     <h2 class="font-semibold">Your upcoming sessions are:</h2>
                     <%- include("sessionList.ejs",{session:upcomingSessions}) %>

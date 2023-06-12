@@ -203,6 +203,7 @@ app.get(
       const playerSports = await Sport.allSports();
       console.log("p",playerSports)
       const sessions = await Session.getAllSessions();
+      const mySessions = await Session.getAllSessions(loggedInPlayer)
       const currentTime = new Date();
       const upcomingSessions = [];
       const playerCancelledSessions = []
@@ -238,6 +239,7 @@ app.get(
           allSports,
           playerSports,
           userRole,
+          mySessions,
           joinedSessions,
           playerCancelledSessions,
           upcomingSessions,
@@ -403,6 +405,18 @@ app.post(
     }
   }
 );
+
+app.get("/mySessions",connectEnsureLogin.ensureLoggedIn(),async(request,response)=>{
+  const userId = request.user.id
+  const player = await Player.findByPk(userId)
+  const playerName = player.dataValues.name
+  const mySessions = await Session.mySessions(userId)
+  response.render("mySessions",{
+    title:"My Sessions",
+    mySessions,
+    playerName
+  })
+})
 
 app.get(
   "/session/:id",
