@@ -224,7 +224,6 @@ app.get(
           }
         }
       }
-      console.log(sessions[3].time);
       console.log("upcomingSessions", upcomingSessions);
       const userRole = player.dataValues.role;
       console.log(userRole);
