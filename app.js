@@ -217,7 +217,6 @@ app.get(
       console.log("a", playerSports);
       const sessions = await Session.getAllSessions();
       console.log("sessions", sessions);
-      console.log(sessions[0].time);
       const currentTime = new Date();
       console.log(currentTime);
       const upcomingSessions = [];
@@ -300,10 +299,7 @@ app.get(
     const player = await Player.findByPk(loggedInPlayer);
     const playerName = player.dataValues.name;
     const sport = await Sport.findByPk(request.params.id);
-    // const sports = await Sport.getSports()
-    console;
     const sportId = sport.dataValues.id;
-    console.log(sportId);
     const session = await Session.getSessions(sportId);
     const sportName = sport.dataValues.name;
     const userRole = player.dataValues.role;
