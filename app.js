@@ -352,7 +352,7 @@ app.delete(
   async (request, response) => {
     if (request.user.role === "admin") {
       try {
-        const res = await Sport.deleteSport(1);
+        const res = await Sport.deleteSport(request.params.id);
         return response.json({ success: res === 1 });
       } catch (error) {
         return response.status(422).json(error);
