@@ -17,58 +17,32 @@
     <div class="container mt-20">
         <div class="grid grid-cols-4">
             <div class="col-start-2 col-span-2">
+                <b class="text-xl text-gray-600">Welcome <%= playerName %></b>
                 <% if (userRole === 'admin'){ %>
-                    <p class="text-xl flex items-center">Welcome <%= playerName %></p>
-                <div>
-                    <a href="/signout" class="hover:underline">Signout</a>
-                </div>
-    
-                <div>
-                    <a href="/createSport" class="hover:underline"> Create a New Sport</a>
-                </div>
-                <div>
-                    <a href="/reports" class="hover:underline">View Reports</a>
-                </div>
-                <div>
-                    <h2 class="font-semibold">All Created Sports are:</h2>
-                </div>
-                <div>
-                    <%- include("createdSportsList.ejs",{data:allSports}) %>
-                </div>
-                <div>
+                    <div class="py-3">
+                        <a href="/createSport" class="hover:underline text-gray-900"> Create a New Sport</a>
+                    </div>
+                    <div class="py-2">
+                        <a href="/reports" class="hover:underline">View Reports</a>
+                    </div>
+                    <div class="py-3">
+                        <h2 class="font-semibold">Available Sports are:</h2>
+                        <%- include("createdSportsList.ejs") %>
+                    </div>
+                <%} else{%>
+                    <div class="py-3">
+                        <h2 class="font-semibold">Available Sports are:</h2>
+                        <%- include("createdSportsList.ejs") %>
+                    </div>
+                <%}%>
+                <div class="py-3">
                     <h2 class="font-semibold">Your upcoming sessions are:</h2>
                     <%- include("sessionList.ejs",{session:upcomingSessions}) %>
                 </div>
-                <div>
-                    <h2 class="font-semibold"> Cancelled Sessions are:</h2>
-                
-    
-                        <%- include("sessionList.ejs",{session:cancelledSessions,playerName:playerName}) %>
-                   
-                    
+                <div class="py-3">
+                    <h2 class="font-semibold">Sessions you cancelled are:</h2>
+                    <%- include("sessionList.ejs",{session:playerCancelledSessions,playerName:playerName}) %>
                 </div>
-                <%}else{ %>
-                    <p class="text-xl flex items-center">Welcome <%= playerName %></p>
-                <div>
-                    <h2 class="font-semibold">All Created Sports are:</h2>
-                   
-                </div>
-                <div>
-                    <%- include("createdSportsList.ejs",{data:playerSports}) %>
-                </div>
-                <div>
-                    <h2 class="font-semibold">Your upcoming sessions are:</h2>
-                    <%- include("sessionList.ejs",{session:upcomingSessions}) %>
-                </div>
-                <div>
-                    <h2 class="font-semibold"> Cancelled Sessions are:</h2>
-                
-    
-                        <%- include("sessionList.ejs",{session:cancelledSessions,playerName:playerName}) %>
-                   
-                    
-                </div>
-                <% } %>
             </div> 
         </div>
     </div>

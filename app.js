@@ -199,20 +199,26 @@ app.get(
       const player = await Player.findByPk(loggedInPlayer);
       const playerName = player.dataValues.name;
       const allSports = await Sport.getSports(loggedInPlayer);
+      console.log(allSports)
       const playerSports = await Sport.allSports();
+      console.log("p",playerSports)
       const sessions = await Session.getAllSessions();
       const currentTime = new Date();
       const upcomingSessions = [];
-      const cancelledSessions = [];
+      const playerCancelledSessions = []
+      const allCancelledSessions = [];
       if (sessions.length > 0) {
         for (let i = 0; i < sessions.length; i++) {
           if (
             sessions[i].time > currentTime &&
-            sessions[i].status == "running"
+            sessions[i].status == "running" && 
+            sessions[i].participants.includes(playerName)
           ) {
             upcomingSessions.push(sessions[i]);
-          } else {
-            cancelledSessions.push(sessions[i]);
+          } else if(sessions[i].status == "cancelled" && sessions[i].userId == loggedInPlayer){
+            playerCancelledSessions.push(sessions[i]);
+          }else if(sessions[i].status == "cancelled"){
+            allCancelledSessions.push(sessions[i])
           }
         }
       }
@@ -226,7 +232,8 @@ app.get(
           allSports,
           playerSports,
           userRole,
-          cancelledSessions,
+          allCancelledSessions,
+          playerCancelledSessions,
           upcomingSessions,
           csrfToken: request.csrfToken(),
         });

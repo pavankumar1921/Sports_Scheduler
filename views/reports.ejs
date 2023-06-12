@@ -11,89 +11,98 @@
     </title>
 </head>
 <body class="bg-green-100">
-    <div class="grid grid-cols-5 grid-rows-5">
-        <div class="col-start-2 col-span-3">
-            <div class="py-5">
-                <h1 class="text-4xl font-semibold text-gray-600">Reports</h1>
-            </div>
-            <div class="py-4">
-                <h1 class="text-2xl text-gray-600">
-                    Total sports - <%= allSports.length %>
-                </h1>
-                <p><ul class="list-none">
-                    <% for (let i=0; i<allSports.length; i++) {%>
-                        <li>
-                            <div class="text-gray-600">
-                                <h3><%= i+1 %>. <%= allSports[i].name %></h3>
-                            </div>
-                        </li>
-                    <% } %>
-                </ul></p>
-                <h1 class="text-2xl text-gray-600">
-                    Total sessions - <%= sessions.length %>
-                </h1>
-                <ul class="bg-white-100 list-none">
-                    <% for (let i=0; i<sessions.length; i++) {%>
-                        <li>
-                            <div class="flex w-fit my-2 px-2 py-1 items-center bg-green-50 hover:bg-slate-300 rounded">
-                                 <b>Session #<%= i+1 %></b><br> 
-                                <span>
-                                    <b>Venue:</b><%=sessions[i].venue%>
-                                </span><br>
-                                <span>
-                                    <b>Date:</b> <%=sessions[i].time %> 
-                                </span><br>
-                                <span class="text-red-500">
-                                    <%=sessions[i].playersNeeded%> slots available!
-                                </span>
-                            </div>
-                        </li>
-                    <% } %>
-                </ul>
-                <h1 class="text-2xl text-gray-600">
-                    Current running sessions - <%= runningSessions.length %>
-                </h1>
-                <ul class="bg-white-100 list-none">
-                    <% for (let i=0; i<runningSessions.length; i++) {%>
-                        <li>
-                            <div class="flex w-fit my-2 px-2 py-1 items-center bg-green-50 hover:bg-slate-300 rounded">
-                                 <b>Session #<%= i+1 %></b><br> 
-                                <span>
-                                    <b>Venue:</b><%=runningSessions[i].venue%>
-                                </span><br>
-                                <span>
-                                    <b>Date:</b> <%=runningSessions[i].time %>
-                                </span><br>
-                                <span class="text-red-500">
-                                    <%=runningSessions[i].playersNeeded%> slots available!
-                                </span>
-                            </div>
-                        </li>
-                    <% } %>
-                </ul>
-                <h1 class="text-2xl text-gray-600">
-                    Cancelled sessions - <%= cancelledSessions.length %>
-                </h1>
-                <ul class="bg-white-100 list-none">
-                    <% for (let i=0; i<cancelledSessions.length; i++) {%>
-                        <li>
-                            <div class="flex w-fit my-2 px-2 py-1 items-center bg-green-50 hover:bg-slate-300 rounded">
-                                 <b>Session #<%= i+1 %></b><br> 
-                                <span>
-                                    <b>Venue:</b><%=cancelledSessions[i].venue%>
-                                </span><br>
-                                <span>
-                                    <b>Date:</b> <%=cancelledSessions[i].time %>
-                                </span><br>
-                                <span class="text-red-500">
-                                    <%=cancelledSessions[i].playersNeeded%> slots available!
-                                </span>
-                            </div>
-                        </li>
-                    <% } %>
-                </ul>
+    <div>
+        <%- include("header.ejs") %>
+    </div>
+    <div class="container mt-20">
+        <div class="grid grid-cols-4">
+            <div class="col-start-2 col-span-2">
+                <div class="py-5">
+                    <h1 class="text-4xl font-semibold text-gray-600">Reports</h1>
+                </div>
+                <div class="py-4">
+                    <h1 class="text-2xl text-gray-600">
+                        Total sports - <%= allSports.length %>
+                    </h1>
+                    <p><ul class="list-none">
+                        <% for (let i=0; i<allSports.length; i++) {%>
+                            <li>
+                                <div class="text-gray-600">
+                                    <h3><%= i+1 %>. <%= allSports[i].name %></h3>
+                                </div>
+                            </li>
+                        <% } %>
+                    </ul></p><br>
+                    <h1 class="py-3 text-2xl text-gray-600">
+                        Total sessions - <%= sessions.length %>
+                    </h1>
+                    <ul class="bg-white-100 list-none">
+                        <% for (let i=0; i<sessions.length; i++) {%>
+                            <li>
+                                <div class="flex flex-col my-2 px-2 py-1 items-start bg-green-50 hover:bg-slate-300 rounded">
+                                     <b>Session #<%= i+1 %></b> 
+                                    <div>
+                                        <b>Venue:</b><%=sessions[i].venue%>
+                                    </div>
+                                    <div>
+                                        <b>Date:</b> <%=sessions[i].time %> 
+                                    </div>
+                                    <div class="text-red-500">
+                                        <%=sessions[i].playersNeeded%> slots available!
+                                    </div>
+                                </div>
+                            </li>
+                        <% } %>
+                    </ul><br>
+                    <h1 class="py-3 text-xl text-gray-600">
+                        Current running sessions - <%= runningSessions.length %>
+                    </h1>
+                    <ul class="bg-white-100 list-none">
+                        <% for (let i=0; i<runningSessions.length; i++) {%>
+                            <li>
+                                <div class="flex flex-col my-2 px-2 py-1 items-start bg-green-50 hover:bg-slate-300 rounded">
+                                     <b>Session #<%= i+1 %></b> 
+                                    <div>
+                                        <b>Venue:</b><%=runningSessions[i].venue%>
+                                    </div>
+                                    <div>
+                                        <b>Date:</b> <%=runningSessions[i].time %>
+                                    </div>
+                                    <div class="text-red-500">
+                                        <%=runningSessions[i].playersNeeded%> slots available!
+                                    </div>
+                                </div>
+                            </li>
+                        <% } %>
+                    </ul><br>
+                    <h1 class=" py-3 text-xl text-gray-600">
+                        Cancelled sessions - <%= cancelledSessions.length %>
+                    </h1>
+                    <ul class="bg-white-100 list-none">
+                        <% for (let i=0; i<cancelledSessions.length; i++) {%>
+                            <li>
+                                <div class="flex flex-col my-2 px-2 py-1 items-start bg-green-50 hover:bg-slate-300 rounded">
+                                     <b>Session #<%= i+1 %></b> 
+                                     <div>
+                                        <b>Reason:</b><%=cancelledSessions[i].reason%>
+                                     </div>
+                                    <div>
+                                        <b>Venue:</b><%=cancelledSessions[i].venue%>
+                                    </div>
+                                    <div>
+                                        <b>Date:</b> <%=cancelledSessions[i].time %>
+                                    </div>
+                                    <div class="text-red-500">
+                                        <%=cancelledSessions[i].playersNeeded%> slots available!
+                                    </div>
+                                </div>
+                            </li>
+                        <% } %>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
+    
 </body>
 </html>

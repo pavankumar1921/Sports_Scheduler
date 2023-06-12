@@ -1,6 +1,6 @@
 <div>
     <h6 class="text-red-600">
-        <%= (session.length==0)?"No Sports sessions are created yet":"" %>
+        <%= (session.length==0)?"No Sports sessions":"" %>
     </h6>
 </div>
 <ul class="bg-white-100 list-none">
@@ -19,7 +19,7 @@
                 </span><br>
                 <% if(session[i].status==="cancelled" && session[i].participants.includes(playerName)) {%>
                     <span>
-                        <b><%=session[i].reason%> yes</b>
+                        <b>This session has been cancelled due to reason:<%=session[i].reason%></b>
                     </span>
                 <%} %>
                 
