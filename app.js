@@ -63,15 +63,6 @@ passport.use(
     }
   )
 );
-// try {
-// let player =
-//   if (!player) {
-//   return done(null, false);
-// }
-// if (result && player.role === "admin") {
-//   return done(null, player);
-// }else if(result && player.role === "player"){
-//   return done(null,player)
 
 passport.serializeUser((player, done) => {
   console.log("serializing user in session", player.id);
@@ -303,15 +294,19 @@ app.get(
     const session = await Session.getSessions(sportId);
     const sportName = sport.dataValues.name;
     const userRole = player.dataValues.role;
-    response.render("sportSession", {
-      title: "Sport Sessions",
-      sportName,
-      userRole,
-      playerName,
-      sportId,
-      session,
-      csrfToken: request.csrfToken(),
-    });
+    if (request.accepts("html")) {
+      response.render("sportSession", {
+        title: "Sport Sessions",
+        sportName,
+        userRole,
+        playerName,
+        sportId,
+        session,
+        csrfToken: request.csrfToken(),
+      });
+    } else {
+      response.json({ sportName, userRole, playerName, sportId, session });
+    }
   }
 );
 
@@ -421,44 +416,28 @@ app.get(
       const loggedInPlayer = request.user.id;
       const player = await Player.findByPk(loggedInPlayer);
       const playerName = player.dataValues.name;
-      console.log(playerName);
       const sessionId = request.params.id;
       const session = await Session.findByPk(sessionId);
-      console.log(session);
       const sportId = session.sportId;
-      console.log(sportId);
       const sport = await Sport.getSport(sportId);
       const sportName = sport.name;
       const sessionTime = session.time;
-
-      console.log(sessionTime);
-      console.log("status", session.status);
       const sessionVenue = session.venue;
       const players = session.participants;
+      const allPlayers = await Player.getPlayers();
       const currentTime = new Date();
-      console.log("players", players);
-      console.log("reason", session.reason);
-      const allPlayers = players
-        .toString()
-        .split(",")
-        .map((player) => player.trim());
       const playersList = [];
       const viewList = [];
-      console.log("allPlayers", allPlayers);
       if (allPlayers.length > 0) {
         for (let i = 0; i < allPlayers.length; i++) {
-          if (Number(allPlayers[i]).toString() != "NaN") {
+          if (players.includes(allPlayers[i].name)) {
+            playersList.push(allPlayers[i]);
+          } else {
             viewList.push(allPlayers[i]);
-            const player = await Player.findByPk(Number(allPlayers[i]));
-            if (player) {
-              const playerName = player.name;
-              playersList.push(playerName);
-            }
           }
+          console.log(allPlayers[i].name);
         }
       }
-      console.log("playersList", playersList);
-      console.log("viewList", viewList);
       if (request.accepts("html")) {
         response.render("allSessions", {
           session,
@@ -478,7 +457,14 @@ app.get(
           csrfToken: request.csrfToken(),
         });
       } else {
-        response.json({ session });
+        response.json({
+          session,
+          playersList,
+          playerName,
+          viewList,
+          allPlayers,
+          sportName,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -511,9 +497,7 @@ app.put(
       const userName = user.name;
       console.log(userName);
       const participants = session.participants;
-
       console.log(participants);
-      //for(let i=0;i<participants.length;i++){
       if (participants.length > 0) {
         if (participants.includes(userName)) {
           console.log("a", session.participants);
@@ -522,7 +506,6 @@ app.put(
           console.log(session.participants);
         }
       }
-      //}
       const join = await Session.joinSession(
         session.participants,
         request.params.id
@@ -554,7 +537,6 @@ app.put(
           console.log(session.participants);
         }
       }
-      // session.participants.pop(request.user.name)
       console.log(session.participants);
       const leave = await Session.leaveSession(
         session.participants,
@@ -585,7 +567,6 @@ app.put(
           console.log(session.participants);
         }
       }
-
       console.log(session.participants);
       const removed = await Session.removePlayer(
         session.participants,
@@ -646,12 +627,9 @@ app.post(
     try {
       const session = await Session.findByPk(req.params.id);
       const sportId = session.sportId;
-      console.log(sportId);
-      console.log(req.body.cancel);
       await session.update({ reason: req.body.cancel, status: "cancelled" });
-
       return res.redirect(`/sports/${sportId}`);
-    } catch {
+    } catch (error) {
       console.log(error);
     }
   }
@@ -667,16 +645,27 @@ app.get(
     const sessions = await Session.getAllSessions();
     const runningSessions = await Session.runningSessions();
     const cancelledSessions = await Session.cancelledSessions();
-    response.render("reports", {
-      title: "Reports",
-      userRole,
-      allSports,
-      playerSports,
-      sessions,
-      runningSessions,
-      cancelledSessions,
-      csrfToken: request.csrfToken(),
-    });
+    if (request.accepts("html")) {
+      response.render("reports", {
+        title: "Reports",
+        userRole,
+        allSports,
+        playerSports,
+        sessions,
+        runningSessions,
+        cancelledSessions,
+        csrfToken: request.csrfToken(),
+      });
+    } else {
+      response.json({
+        userRole,
+        allSports,
+        playerSports,
+        sessions,
+        runningSessions,
+        cancelledSessions,
+      });
+    }
   }
 );
 module.exports = app;

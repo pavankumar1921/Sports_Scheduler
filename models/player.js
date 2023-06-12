@@ -17,6 +17,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
       });
     }
+    static getPlayers() {
+      return this.findAll({
+        where: {
+          role: "player",
+        },
+      });
+    }
   }
   Player.init(
     {
