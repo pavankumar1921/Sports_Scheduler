@@ -40,6 +40,10 @@
                     <%- include("sessionList.ejs",{session:upcomingSessions}) %>
                 </div>
                 <div class="py-3">
+                    <h2 class="font-semibold">Joined sessions are:</h2>
+                    <%- include("sessionList.ejs",{session:joinedSessions}) %>
+                </div>
+                <div class="py-3">
                     <h2 class="font-semibold">Sessions you cancelled are:</h2>
                     <%- include("sessionList.ejs",{session:playerCancelledSessions,playerName:playerName}) %>
                 </div>

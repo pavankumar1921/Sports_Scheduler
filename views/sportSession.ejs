@@ -30,43 +30,46 @@
     </title>
 </head>
 <body class="bg-green-100">
-    <div class="grid grid-cols-5 grid-rows-5">
-        <div class="col-start-2 col-span-3">
-            <div class="py-5">
-                <h1 class="text-4xl font-semibold text-gray-600"><%=sportName%></h1>
-            </div>
-            <div class="py-4">
-                <h1 class="text-2xl text-gray-600">
-                    Sessions
-                </h1>
-            </div>
-            <div class="grid grid-cols-4">
-                    <% if (userRole === 'admin'){ %>
-                    <div class="col-start-3">
-                        <div class="flex items-center w-fit my-2">
-                              <a href="/sports/<%=sportId %>/edit" class="hover:underline hover:text-gray-600">Edit</a>
+    <div>
+        <%- include("header.ejs") %>
+    </div>
+    <div class="container mt-20">
+        <div class="grid grid-cols-5 grid-rows-5">
+            <div class="col-start-2 col-span-3">
+                <div class="py-5">
+                    <h1 class="text-4xl font-semibold text-gray-600"><%=sportName%></h1>
+                </div>
+                <div class="py-4">
+                    <h1 class="text-2xl text-gray-600">
+                        Sessions
+                    </h1>
+                </div>
+                <div class="grid grid-cols-4">
+                        <% if (userRole === 'admin'){ %>
+                        <div class="col-start-3">
+                            <div class="rounded w-fit px-2 py-1 flex gap-2 cursor-pointer hover:text-600">
+                                  <button href="/sports/<%=sportId %>/edit" class="text-white bg-green-600 hover:bg-green-800 font-medium rounded px-3 py-1.5">Edit</button>
+                            </div>
+                        </div> 
+                        <div class="col-start-4">
+                            <div class="rounded w-fit px-2 py-1 flex gap-2 cursor-pointer hover:text-600">
+                                <button onclick="deleteSport(<%= sportId %>)" class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-3 py-1.5 justify-right">Delete</button>
+                            </div>
                         </div>
-                    </div> 
-                    <div class="col-start-4">
-                        <div class="rounded w-fit px-2 py-1 flex gap-2 cursor-pointer hover:text-600">
-                            <button onclick="deleteSport(<%= sportId %>)" class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-3 py-1.5 justify-right">Delete</button>
-                        </div>
-                    </div>
-                    <% } 
-                    else { %>
-                    <% } %>    
-            </div>
-            <div>
-
-            </div>
-            <div class="py-3">
-                <a href="/sport/<%= sportId %>/createSession" class="hover:underline hover:text-gray-600">Create a new Session</a>
-            </div>
-            <%- include("sessionList.ejs",{data:session,playerName:playerName}) %>
-            <div class="py-3">
-                <a href="#" class="hover:underline hover:text-gray-600">View previous Sessions</a>
+                        <% } 
+                        else { %>
+                        <% } %>    
+                </div>
+                <div>
+    
+                </div>
+                <div class="py-3">
+                    <a href="/sport/<%= sportId %>/createSession" class="hover:underline hover:text-gray-600">Create a new Session</a>
+                </div>
+                <%- include("sessionList.ejs",{data:session,playerName:playerName}) %>
             </div>
         </div>
     </div>
+    
 </body>
 </html>

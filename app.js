@@ -206,22 +206,28 @@ app.get(
       const currentTime = new Date();
       const upcomingSessions = [];
       const playerCancelledSessions = []
-      const allCancelledSessions = [];
+      const joinedSessions = [];
       if (sessions.length > 0) {
         for (let i = 0; i < sessions.length; i++) {
           if (
             sessions[i].time > currentTime &&
             sessions[i].status == "running" && 
-            sessions[i].participants.includes(playerName)
+            !sessions[i].participants.includes(playerName)
           ) {
             upcomingSessions.push(sessions[i]);
           } else if(sessions[i].status == "cancelled" && sessions[i].userId == loggedInPlayer){
             playerCancelledSessions.push(sessions[i]);
-          }else if(sessions[i].status == "cancelled"){
-            allCancelledSessions.push(sessions[i])
           }
         }
       }
+      if(sessions.length > 0) {
+        for (let i = 0; i < sessions.length; i++){
+          if (sessions[i].participants.includes(playerName)){
+            joinedSessions.push(sessions[i])
+          }
+        }
+      }
+      console.log("joined",joinedSessions)
       console.log("upcomingSessions", upcomingSessions);
       const userRole = player.dataValues.role;
       console.log(userRole);
@@ -232,7 +238,7 @@ app.get(
           allSports,
           playerSports,
           userRole,
-          allCancelledSessions,
+          joinedSessions,
           playerCancelledSessions,
           upcomingSessions,
           csrfToken: request.csrfToken(),
