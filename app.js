@@ -384,8 +384,7 @@ app.post(
     try {
       console.log(request.user.id);
       const allPlayers = request.body.playersJoining;
-      const inputPlayers = allPlayers.split(",")
-      // .split(",").map((player) => player.trim());
+      const inputPlayers = allPlayers?.split(",").map((player) => player.trim());
       console.log(inputPlayers);
       console.log(sportId);
       const session = await Session.create({
