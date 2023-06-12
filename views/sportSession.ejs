@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>">
+    <meta name="sportId" content="<%=sportId%>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="./css/styles.css" rel="stylesheet">
     <script>
         var token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+        var sportId = document.querySelector('meta[name="sportId"]').getAttribute("content")
         function deleteSport(id) {
             fetch(`/deleteSport/${id}`, {
                 method: "delete",
@@ -17,7 +20,7 @@
                 })
             }).then((res) => {
                 if (res.ok) {
-                    window.location.href = '/sports';
+                    window.location.href="/sports"
                 }
             }).catch((err) => console.error(err))
         }
@@ -46,7 +49,7 @@
                     </div> 
                     <div class="col-start-4">
                         <div class="rounded w-fit px-2 py-1 flex gap-2 cursor-pointer hover:text-600">
-                            <a onclick="deleteSport(<%= sportId %>)" class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-3 py-1.5 justify-right">Delete</a>
+                            <button onclick="deleteSport(<%= sportId %>)" class="text-white bg-red-600 hover:bg-red-800 font-medium rounded px-3 py-1.5 justify-right">Delete</button>
                         </div>
                     </div>
                     <% } 

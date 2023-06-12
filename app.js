@@ -352,8 +352,8 @@ app.delete(
   async (request, response) => {
     if (request.user.role === "admin") {
       try {
-        const res = await Sport.deleteSport(request.params.id);
-        return response.json(res);
+        const res = await Sport.deleteSport(1);
+        return response.json({ success: res === 1 });
       } catch (error) {
         return response.status(422).json(error);
       }
@@ -367,8 +367,6 @@ app.get(
   async (request, response) => {
     const sport = await Sport.findByPk(request.params.id);
     const sportId = request.params.id;
-    console.log(sport);
-    console.log(sportId);
     const sportName = sport.dataValues.name;
     response.render("session", {
       title: "Session",
