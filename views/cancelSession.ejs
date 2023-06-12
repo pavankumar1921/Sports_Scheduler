@@ -7,12 +7,35 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="./css/styles.css" rel="stylesheet">
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width:100vw;
+        }
+
+        .form-container {
+            max-width: 400px;
+            width:100%;
+            padding: 40px;
+            border: 1px solid #050505;
+            border-radius: 8px;
+        }
+    </style>
     <title><%= title %></title>
 </head>
-<body class="bg-green-100">
-    <div class="grid grid-cols-3">
-        <div class="col-start-2 col-span-1">
-            <h3>Cancel Session</h3>
+<body class="bg-gray-100">
+    <div class="fixed top-0 w-full z-10">
+        <%-include("header.ejs")%>
+    </div>
+    <div class="px-8 mt-20">
+        <div class="container max-w-sm mx-auto">
+            <div class="form-container bg-green-100">
+                <div class="py-4">
+                    <p class="font-semibold text-2xl text-green-600">Cancel Session</p>
+                </div>
+                
             <form action="/session/<%=sessionId%>/cancelSession" method="post">
                 <input type="hidden" name="_csrf" value="<%= csrfToken%>">
                 <div class="py-3">
@@ -25,6 +48,6 @@
             </form>
         </div>
         <%-include ("flashMessages.ejs") %>
-    </div>
+    </div>  
 </body>
 </html>
