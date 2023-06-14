@@ -65,7 +65,10 @@ npm test
 - Change Password
 ![Screenshot (152)](https://github.com/pavankumar1921/Sports_Scheduler/assets/104848621/49fcda35-1c3d-4cb6-9d2b-8daff42a8b12)
 
+## Live Application URL
+https://pavans-sports-scheduler.onrender.com
 
+## Demo Video
 
 
 
