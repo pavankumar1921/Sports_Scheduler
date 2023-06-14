@@ -49,8 +49,8 @@ npm test
 ![Screenshot (150)](https://github.com/pavankumar1921/Sports_Scheduler/assets/104848621/75b9f1d0-eb7e-4e08-b534-62a11e8062e0)
 
 - Sports
-![Screenshot (151)](https://github.com/pavankumar1921/Sports_Scheduler/assets/104848621/d5137fad-a1a7-4ea9-8abd-47c3f672d13d)
 ![Screenshot (153)](https://github.com/pavankumar1921/Sports_Scheduler/assets/104848621/d66e543a-63c0-4af2-bdb1-1f4b97f08e08)
+![Screenshot (151)](https://github.com/pavankumar1921/Sports_Scheduler/assets/104848621/d5137fad-a1a7-4ea9-8abd-47c3f672d13d)
 
 - Sports Session
 ![Screenshot (156)](https://github.com/pavankumar1921/Sports_Scheduler/assets/104848621/188813d7-5412-416a-b61d-c1d9b704a500)
