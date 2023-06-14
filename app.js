@@ -382,7 +382,15 @@ app.post(
   "/sport/:id/createSession",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
-    const sportId = request.params.id;
+    const sportId = request.params.id
+    if(request.body.venue.length == 0){
+      request.flash("error","Venue must be given");
+      return response.redirect(`/sport/${sportId}/createSession`)
+    }
+    if(request.body.time.length == 0){
+      request.flash("error","Please provide a valid time");
+      return response.redirect(`/sport/${sportId}/createSession`)
+    }
     try {
       const allPlayers = request.body.playersJoining;
       const inputPlayers = allPlayers?.split(",").map((player) => player.trim());
