@@ -16,6 +16,8 @@
 - Player is able to cancel a session he created.
 - And a player can remove available players in a sports session.
 
+### An admin can delete a sport only if there are no sessions created for that particular sport.
+ 
 ## To Run Locally
 - Install postgresql and update your postgresql username and password in config.json
 - To start the postgresql server
