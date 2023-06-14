@@ -19,4 +19,4 @@
 # To Run Locally
 - Install postgresql and update your postgresql username and password in config.json
 - To start the postgresql server
-  sudo service postgresql start
+```sudo service postgresql start
