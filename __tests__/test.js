@@ -76,13 +76,6 @@ describe("Sports Scheduler", function () {
       name: "Cricket",
       _csrf: csrfToken,
     });
-    console.log(response.body.name);
-    const QResponse = await agent
-      .get(`/sports`)
-      .set("Accept", "application/json");
-    const parsedGroupedResponse = JSON.parse(QResponse.text);
-    console.log(parsedGroupedResponse);
-    console.log(response.body.id);
     expect(response.statusCode).toBe(302);
   });
 
@@ -129,53 +122,5 @@ describe("Sports Scheduler", function () {
     })
     expect(res.statusCode).toBe(302)
   })
-
-  // test("deleting a sport", async () => {
-  //   const agent = request.agent(server);
-  //   await login(agent, "test2@gmail.com", "12345678");
-  //   let res = await agent.get("/createSport");
-  //   const csrfToken = extractCsrfToken(res);
-  //   await agent.post("/creatingSport").send({
-  //     name: "Cricket",
-  //     _csrf: csrfToken,
-  //   });
-  //   const groupedResponse = await agent
-  //     .get("/sports")
-  //     .set("Accept", "Application/json");
-  //     console.log(groupedResponse)
-  //   const parsedResponse = JSON.parse(groupedResponse.text);
-
-  //   console.log("pr",parsedResponse);
-  //   const totalSports = parsedResponse.allSports.length;
-  //   const recentSport = parsedResponse.allSports[totalSports - 1];
-  //   res = await agent.delete(`/deleteSport/${recentSport.id}`)
-  //   expect(res.statusCode).toBe(200);
-  // });
-  // test("edit sport name",async()=>{
-  //   const agent = request.agent(server);
-  //   await login(agent, "test2@gmail.com", "12345678");
-  //   const user = agent.user;
-  //   console.log(user);
-  //   let res = await agent.get("/createSport");
-  //   let csrf = extractCsrfToken(res);
-  //   await agent.post("/creatingSport").send({
-  //     name: "cricket",
-  //     _csrf: csrf,
-  //   });
-  //   const groupedResponse = await agent
-  //     .get("/sports")
-  //     .set("Accept", "Application/json");
-  //   const parsedResponse = JSON.parse(groupedResponse.text);
-  //   console.log(parsedResponse);
-  //   const totalSports = parsedResponse.allSports.length;
-  //   const recentSport = parsedResponse.allSports[totalSports - 1];
-  //   res = await agent.get(`/sports/${recentSport.id}/edit`)
-  //   csrf = extractCsrfToken(res)
-  //   res = await agent.post(`/sports/${recentSport.id}/edit`).send({
-  //     name:"badminton",
-  //     sportId:recentSport.id,
-  //     _csrf:csrf
-  //   }).set("Accept","application/json")
-  //   expect(res.statusCode).toBe(302)
-  // })
+ 
 });
