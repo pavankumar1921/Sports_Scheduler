@@ -199,9 +199,7 @@ app.get(
       const player = await Player.findByPk(loggedInPlayer);
       const playerName = player.dataValues.name;
       const allSports = await Sport.getSports(loggedInPlayer);
-      console.log(allSports)
       const playerSports = await Sport.allSports();
-      console.log("p",playerSports)
       const sessions = await Session.getAllSessions();
       const mySessions = await Session.getAllSessions(loggedInPlayer)
       const currentTime = new Date();
@@ -228,10 +226,7 @@ app.get(
           }
         }
       }
-      console.log("joined",joinedSessions)
-      console.log("upcomingSessions", upcomingSessions);
       const userRole = player.dataValues.role;
-      console.log(userRole);
       if (request.accepts("html")) {
         response.render("sports", {
           title: "Sports Page",
@@ -542,7 +537,6 @@ app.put(
           console.log(session.participants);
         }
       }
-      console.log(session.participants);
       const leave = await Session.leaveSession(
         session.participants,
         request.params.id
@@ -570,7 +564,6 @@ app.put(
           console.log(session.participants);
         }
       }
-      console.log(session.participants);
       const removed = await Session.removePlayer(
         session.participants,
         request.params.id

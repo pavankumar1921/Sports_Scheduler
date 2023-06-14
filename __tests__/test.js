@@ -48,6 +48,14 @@ describe("Sports Scheduler", function () {
     expect(res.statusCode).toBe(302);
   });
 
+  test("User login", async () => {
+    let res = await agent.get("/sports");
+    expect(res.statusCode).toBe(200);
+    await login(agent, "test2@gmail.com", "12345678");
+    res = await agent.get("/sports");
+    expect(res.statusCode).toBe(200);
+  });
+
   test("Sign out", async () => {
     let res = await agent.get("/sports");
     expect(res.statusCode).toBe(200);
@@ -85,7 +93,7 @@ describe("Sports Scheduler", function () {
     console.log(user);
     let res = await agent.get("/createSport");
     let csrf = extractCsrfToken(res);
-    await agent.post("/sports").send({
+    await agent.post("/creatingSport").send({
       name: "cricket",
       _csrf: csrf,
     });
@@ -108,46 +116,66 @@ describe("Sports Scheduler", function () {
     });
     expect(res.statusCode).toBe(302);
   });
-  //  test("Editing a sportName",async()=>{
-  //       const agent = request.agent(server)
-  //       await login(agent,"test2@gmail.com","12345678")
-  //       let res = await agent.get("/createSport")
-  //       let csrfToken = extractCsrfToken(res)
-  //       const sport = await agent.post("/creatingSport").send({
-  //           name:"Cricket",
-  //           _csrf:csrfToken
-  //       })
-  //       const  = await Sport
-  //       // const sportId = sport.body.id
-  //       // expect(sportId).toBeDefined()
-  //       // console.log("created",sportId)
-  //       const getSportResponse = await agent.get(`/sport/${sportId}/edit`)
-  //       csrfToken = extractCsrfToken(getSportResponse)
-  //       const editResponse = await agent.post(`/sport/${sportId}/edit`).send({
-  //         name:"Soccer",
-  //         _csrf:csrfToken
-  //       })
-  //       expect(editResponse.statusCode).toBe(302)
-  //       // const spRes = await agent.get("/sports").set("Accept","Application/json");
-  //       // const parsedResponse = JSON.parse(spRes.text)
-  //       // const sportId = parsedResponse.id
-  //       // res = await agent.get(`/sport/${sportId}/edit`)
-  //       // csrfToken = extractCsrfToken(res)
-  //       // res = await agent.post(`/sport/${sportId}/edit`).send({
-  //       //   name:"cricket",
-  //       //   _csrf:csrfToken
-  //       // })
-  //       // expect(res.statusCode).toBe(302)
-  //     })
-  // test("creating a session",async()=>{
-  //   const agent = request.agent(server)
-  //   await login(agent,"test2@gmail.com","12345678")
-  //   const res = await agent.get("/createSport");
+ 
+  test("change password",async()=>{
+    const agent = request.agent(server);
+    await login(agent, "test2@gmail.com", "12345678");
+    let res = await agent.get("/updatePassword");
+    let csrf = extractCsrfToken(res);
+    res = await agent.post("/updatePassword").send({
+      newPassword: "87654321",
+      reEnterPassword:"87654321",
+      _csrf : csrf
+    })
+    expect(res.statusCode).toBe(302)
+  })
+
+  // test("deleting a sport", async () => {
+  //   const agent = request.agent(server);
+  //   await login(agent, "test2@gmail.com", "12345678");
+  //   let res = await agent.get("/createSport");
   //   const csrfToken = extractCsrfToken(res);
-  //   const response = await agent.post("/creatingSport").send({
+  //   await agent.post("/creatingSport").send({
   //     name: "Cricket",
   //     _csrf: csrfToken,
   //   });
-  //   const res = await agent.get
-  // })
+  //   const groupedResponse = await agent
+  //     .get("/sports")
+  //     .set("Accept", "Application/json");
+  //     console.log(groupedResponse)
+  //   const parsedResponse = JSON.parse(groupedResponse.text);
+
+  //   console.log("pr",parsedResponse);
+  //   const totalSports = parsedResponse.allSports.length;
+  //   const recentSport = parsedResponse.allSports[totalSports - 1];
+  //   res = await agent.delete(`/deleteSport/${recentSport.id}`)
+  //   expect(res.statusCode).toBe(200);
+  // });
+  test("edit sport name",async()=>{
+    const agent = request.agent(server);
+    await login(agent, "test2@gmail.com", "12345678");
+    const user = agent.user;
+    console.log(user);
+    let res = await agent.get("/createSport");
+    let csrf = extractCsrfToken(res);
+    await agent.post("/creatingSport").send({
+      name: "cricket",
+      _csrf: csrf,
+    });
+    const groupedResponse = await agent
+      .get("/sports")
+      .set("Accept", "Application/json");
+    const parsedResponse = JSON.parse(groupedResponse.text);
+    console.log(parsedResponse);
+    const totalSports = parsedResponse.allSports.length;
+    const recentSport = parsedResponse.allSports[totalSports - 1];
+    res = await agent.get(`/sports/${recentSport.id}/edit`)
+    csrf = extractCsrfToken(res)
+    res = await agent.post(`/sports/${recentSport.id}/edit`).send({
+      name:"badminton",
+      sportId:recentSport.id,
+      _csrf:csrf
+    }).set("Accept","application/json")
+    expect(res.statusCode).toBe(302)
+  })
 });
