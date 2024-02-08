@@ -1,7 +1,7 @@
 name: run tests
 on: push
 env:
-  PG_DATABASE: sports_scheduler_dev
+  PG_DATABASE: sports_scheduler_test
   PG_USER: postgres
   PG_PASSWORD: abcdef
 jobs:
@@ -20,7 +20,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: abcdef
-          POSTGRES_DB: sports_scheduler_dev
+          POSTGRES_DB: sports_scheduler_test
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready

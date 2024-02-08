@@ -220,6 +220,7 @@ app.get(
           }
         }
       }
+      
       if(sessions.length > 0) {
         for (let i = 0; i < sessions.length; i++){
           if (sessions[i].participants.includes(playerName)){
