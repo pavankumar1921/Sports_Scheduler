@@ -189,6 +189,7 @@ app.post("/players", async (request, response) => {
   }
 });
 
+
 app.get(
   "/sports",
   connectEnsureLogin.ensureLoggedIn(),
